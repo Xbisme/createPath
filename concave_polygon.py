@@ -312,6 +312,20 @@ def closest_point(point, points):
     if np.linalg.norm(np.array(point) - np.array(point1)) < np.linalg.norm(np.array(point) - np.array(point2)):
         return True
     return False
+def get_path( points):
+    edge = get_edge(points)
+    path = []
+    point1 = points[edge]
+    if edge == len(points) - 1:
+        next_edge = 0
+    else: next_edge = edge + 1
+    point2 = points[next_edge]
+    points.append(points[0])
+    array = np.array(points)
+    x,y = cp.planning(0.7,-1,array[:,0],array[:,1],[],0,point1, point2)
+    for j in range(len(x)):
+        path.extend([[x[j],y[j]]])
+    return path
 if __name__ == '__main__':
     # points = [(7, 9), (3, 8.64), (1.55, 5.78), (3.88, 6.12), (3.32, 5.55), (4.25, 3.78), (5.34, 4.55), (8.47, 3.23), (8, 6), (9, 8)]
     # points = [(8, 9), (3, 8.64), (3.5, 7.5), (1.55, 7), (3.88, 6.12)]
@@ -325,23 +339,19 @@ if __name__ == '__main__':
     # points = [(-2.80, 8.89), (-4.46, 6.57), (-7.70, 5.58), (-4.68, 3.93),
     #          (-1.29, 3.86), (1.55, 6.25), (-1.71, 6.55)]
     
-    po = Polygon(points)
-    # gpd.GeoSeries(po).plot()
-    # plt.plot(*po.exterior.xy)
-    edge = get_edge(points)
-    # edge = 4
-    concave_points = line_sort(edge, points)
-    list_poly = list()
-    list_points = []
-    path = []
-    list_path = []
-    point1 = points[edge]
-    if edge == len(points) - 1:
-        next_edge = 0
-    else: next_edge = edge + 1
-    point2 = points[next_edge]
+   
 
-    ## get path with recursive
+    ## Get path with recursive
+    # edge = get_edge(points)
+    # list_points = []
+    # list_poly = list()
+    # path = []
+    # point1 = points[edge]
+    # if edge == len(points) - 1:
+    #     next_edge = 0
+    # else: next_edge = edge + 1
+    # point2 = points[next_edge]
+    # concave_points = line_sort(edge, points)
     # a = decomp(concave_points, edge, points, list_poly)
     # for i in a:
     #     array = []
@@ -363,20 +373,13 @@ if __name__ == '__main__':
     #             if not closest_point(path[-1],list_path):
     #                 list_path = swap_pos(list_path)
     #     path.extend(list_path)
-    
+
+    ## Get path for base
+    path = get_path(points)
     points.append(points[0])
     ox2,oy2 = zip(*points)
     plt.plot(ox2,oy2)
-    
-    ## Get path for base
-    array = np.array(points)
-    x,y = cp.planning(0.7,-1,array[:,0],array[:,1],[],0,point1, point2)
-    for j in range(len(x)):
-        list_path.extend([[x[j],y[j]]])
-    path.extend(list_path)
-
     x0,y0 = zip(*path)
-    # print(list_path)
     plt.plot(x0,y0)
     plt.plot(x0[0],y0[0],"-xk")
     plt.show()
