@@ -312,7 +312,7 @@ def closest_point(point, points):
     if np.linalg.norm(np.array(point) - np.array(point1)) < np.linalg.norm(np.array(point) - np.array(point2)):
         return True
     return False
-def get_path( points):
+def get_path( points,resolution,dr_move):
     edge = get_edge(points)
     path = []
     point1 = points[edge]
@@ -322,7 +322,7 @@ def get_path( points):
     point2 = points[next_edge]
     points.append(points[0])
     array = np.array(points)
-    x,y = cp.planning(0.7,-1,array[:,0],array[:,1],[],0,point1, point2)
+    x,y = cp.planning(resolution,dr_move,array[:,0],array[:,1],[],0,point1, point2)
     for j in range(len(x)):
         path.extend([[x[j],y[j]]])
     return path
@@ -331,11 +331,11 @@ if __name__ == '__main__':
     # points = [(8, 9), (3, 8.64), (3.5, 7.5), (1.55, 7), (3.88, 6.12)]
     # points = [(0.45, 0.75),  (5.58, 1.78), (7.45, 3.21), (6.5, 3.5),
     #           (4.75, 6.15), (4.32, 5.94), (3.75, 4.55), (2.45, 6.44), (1.55, 5.45)]
-    points = [(3.03, 9.35), (4.03, 3.19), (6.53, 4.5), (11.01, 2.47), (15.15, 3.73), (11.75, 4.89), (15.61, 7.01)]
+    # points = [(3.03, 9.35), (4.03, 3.19), (6.53, 4.5), (11.01, 2.47), (15.15, 3.73), (11.75, 4.89), (15.61, 7.01)]
     # points = [(-5.19, 1.82), (-6.57, 0.26), (-2.39, -1.56), (2.63, -0.32), (0.07, 2.2), (2.59, 3.66), (-1.13, 3.72),
     #          (-3.53, 6.78), (-6.23, 3.98)]
-    # points = [(-3.24, 6.20), (-4.85, 3), (-6.97, 3.93), (-4.90, 1.17), (-5.99, -0.70), (-2,0.6),
-    #          (-2.35, 3.46), (1.08, 2.75)]
+    points = [(-3.24, 6.20), (-4.85, 3), (-6.97, 3.93), (-4.90, 1.17), (-5.99, -0.70), (-2,0.6),
+             (-2.35, 3.46), (1.08, 2.75)]
     # points = [(-2.80, 8.89), (-4.46, 6.57), (-7.70, 5.58), (-4.68, 3.93),
     #          (-1.29, 3.86), (1.55, 6.25), (-1.71, 6.55)]
     
@@ -375,7 +375,7 @@ if __name__ == '__main__':
     #     path.extend(list_path)
 
     ## Get path for base
-    path = get_path(points)
+    path = get_path(points,0.7,-1)
     points.append(points[0])
     ox2,oy2 = zip(*points)
     plt.plot(ox2,oy2)
